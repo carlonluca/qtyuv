@@ -117,8 +117,8 @@ void YuvShader::updateState(const RenderState& state, QSGMaterial* newMaterial, 
     };
     f->glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     for (int i = 0; i < 3; i++) {
-        f->glBindTexture(GL_TEXTURE_2D, m_textures[i]);
-        f->glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, widths[i], heights[i], 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, planes[i]);
+        f->glBindTexture(GL_TEXTURE_RECTANGLE_NV, m_textures[i]);
+        f->glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, GL_LUMINANCE, widths[i], heights[i], 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, planes[i]);
     }
 }
 
@@ -129,11 +129,9 @@ void YuvShader::initialize()
     f->glGenTextures(3, m_textures);
     for (int i = 0; i < 3; i++) {
         f->glActiveTexture(GL_TEXTURE0 + i);
-        f->glBindTexture(GL_TEXTURE_2D, m_textures[i]);
-        f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        f->glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        f->glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        f->glBindTexture(GL_TEXTURE_RECTANGLE_NV, m_textures[i]);
+        f->glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        f->glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     }
 
     id_y = program()->uniformLocation("s_texture_y");
@@ -200,7 +198,7 @@ QSGNode* YuvDisplay::updatePaintNode(QSGNode* node, UpdatePaintNodeData*)
         n->setFlag(QSGGeometryNode::OwnsGeometry, true);
     }
 
-    QSGGeometry::updateTexturedRectGeometry(n->geometry(), boundingRect(), QRectF(0, 0, 1, 1));
+    QSGGeometry::updateTexturedRectGeometry(n->geometry(), boundingRect(), QRectF(0, 0, 1920, 1080));
 
     std::optional<VideoFrame> nextFrame = m_queue.peek();
     bool swapped = false;
