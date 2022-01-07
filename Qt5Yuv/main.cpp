@@ -38,7 +38,7 @@ int main(int argc, char** argv)
     QGuiApplication app(argc, argv);
 
     QCommandLineParser parser;
-    parser.setApplicationDescription("Test helper");
+    parser.setApplicationDescription("Use an OpenGL shader to convert/upload yuv420p frames");
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addPositionalArgument(QSL("source"),
